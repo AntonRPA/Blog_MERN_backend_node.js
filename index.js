@@ -5,11 +5,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 //  mongoose.set('strictQuery', true);
 
-import {
-  registerValidation,
-  loginValidation,
-  postCreateValidation,
-} from './validations.js';
+import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
 
 import { checkAuth, handleValidationnErrors } from './utils/index.js';
 
@@ -17,7 +13,7 @@ import { UserController, PostController } from './controllers/index.js';
 
 mongoose
   .connect(
-    'mongodb+srv://admin:wwwwww@cluster0.j4bqi3w.mongodb.net/blog?retryWrites=true&w=majority'
+    'mongodb+srv://admin:wwwwww@cluster0.j4bqi3w.mongodb.net/blog?retryWrites=true&w=majority',
   )
   .then(() => console.log('DB ok'))
   .catch((err) => console.log('DB error', err));
@@ -41,19 +37,9 @@ app.use(cors());
 app.use('/uploads', express.static('uploads')); //Get запрос на получение статичного файла
 
 //Авторизация пользователя
-app.post(
-  '/auth/login',
-  loginValidation,
-  handleValidationnErrors,
-  UserController.login
-);
+app.post('/auth/login', loginValidation, handleValidationnErrors, UserController.login);
 //Регистрация пользователя
-app.post(
-  '/auth/register',
-  registerValidation,
-  handleValidationnErrors,
-  UserController.register
-);
+app.post('/auth/register', registerValidation, handleValidationnErrors, UserController.register);
 //Проверка пользователя
 app.get('/auth/me', checkAuth, UserController.getMe);
 
@@ -64,23 +50,22 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   });
 });
 
+//Теги
+app.get('/tags', PostController.getLastTags);
+
 //Работа с постами
 app.get('/posts', PostController.getAll);
+app.get('/posts/popular', PostController.getAllPopular);
+app.get('/tags/:tag', PostController.getPostsTag);
 app.get('/posts/:id', PostController.getOne);
-app.post(
-  '/posts',
-  checkAuth,
-  postCreateValidation,
-  handleValidationnErrors,
-  PostController.create
-);
+app.post('/posts', checkAuth, postCreateValidation, handleValidationnErrors, PostController.create);
 app.delete('/posts/:idPost', checkAuth, PostController.remove);
 app.patch(
   '/posts/:id',
   checkAuth,
   postCreateValidation,
   handleValidationnErrors,
-  PostController.update
+  PostController.update,
 );
 
 app.listen(4444, (err) => {
