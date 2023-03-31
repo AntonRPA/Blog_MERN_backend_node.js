@@ -23,7 +23,10 @@ export const getLastTags = async (req, res) => {
 export const getAll = async (req, res) => {
   try {
     //Сортировка по дате по возврастанию
-    const posts = await PostModel.find().sort({ createdAt: -1 }).populate('user').exec();
+    const posts = await PostModel.find()
+      .sort({ createdAt: -1 })
+      .populate('user', 'fullName avatarUrl')
+      .exec();
 
     res.json(posts);
   } catch (err) {
@@ -38,7 +41,10 @@ export const getAll = async (req, res) => {
 export const getAllPopular = async (req, res) => {
   try {
     //Получаем посты с сортировкой по просмотрам по убыванию
-    const posts = await PostModel.find().sort({ viewsCount: -1 }).populate('user').exec();
+    const posts = await PostModel.find()
+      .sort({ viewsCount: -1 })
+      .populate('user', 'fullName avatarUrl')
+      .exec();
     // const postsPopular = posts.sort((a, b) => b.viewsCount - a.viewsCount);
 
     res.json(posts);
@@ -58,7 +64,7 @@ export const getPostsTag = async (req, res) => {
     //Ищет объекты, один из тегов которых "$eq - равен" значению postTag
     const posts = await PostModel.find({ tags: { $elemMatch: { $eq: postTag } } })
       .sort({ viewsCount: -1 })
-      .populate('user')
+      .populate('user', 'fullName avatarUrl')
       .exec();
     res.json(posts);
   } catch (err) {
@@ -100,7 +106,7 @@ export const getOne = async (req, res) => {
 
         res.json(doc);
       },
-    ).populate('user');
+    ).populate('user', 'fullName avatarUrl');
   } catch (err) {
     console.log(err);
     res.status(500).json({

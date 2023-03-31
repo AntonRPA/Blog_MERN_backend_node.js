@@ -5,11 +5,16 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 //  mongoose.set('strictQuery', true);
 
-import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
+import {
+  registerValidation,
+  loginValidation,
+  postCreateValidation,
+  commentCreateValidation,
+} from './validations.js';
 
 import { checkAuth, handleValidationnErrors } from './utils/index.js';
 
-import { UserController, PostController } from './controllers/index.js';
+import { UserController, PostController, CommentController } from './controllers/index.js';
 
 mongoose
   .connect(
@@ -67,6 +72,17 @@ app.patch(
   handleValidationnErrors,
   PostController.update,
 );
+
+//Работа с комментариями
+app.post(
+  '/comment',
+  checkAuth,
+  commentCreateValidation,
+  handleValidationnErrors,
+  CommentController.create,
+);
+app.get('/comments', CommentController.getAllComment);
+app.get('/comments/:id', CommentController.getCommentsPost);
 
 app.listen(4444, (err) => {
   if (err) {
