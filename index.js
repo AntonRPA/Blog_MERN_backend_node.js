@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'fs';
 import multer from 'multer';
 import cors from 'cors';
 
@@ -18,7 +19,8 @@ import { UserController, PostController, CommentController } from './controllers
 
 mongoose
   .connect(
-    'mongodb+srv://admin:wwwwww@cluster0.j4bqi3w.mongodb.net/blog?retryWrites=true&w=majority',
+    process.env.MONGODB_URI,
+    // 'mongodb+srv://admin:wwwwww@cluster0.j4bqi3w.mongodb.net/blog?retryWrites=true&w=majority',
   )
   .then(() => console.log('DB ok'))
   .catch((err) => console.log('DB error', err));
@@ -28,6 +30,11 @@ const app = express();
 //Создаем хранилище изображений
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
+    //Если папка "uploads" не найдена, то создаем ее
+    if (!fs.existsSync('uploads')) {
+      fs.mkdirSync('uploads');
+    }
+
     cb(null, 'uploads');
   },
   filename: (_, file, cb) => {
@@ -85,7 +92,7 @@ app.get('/comments', CommentController.getAllComment);
 app.get('/comments/quantity/:quantity', CommentController.getQuantityComment);
 app.get('/comments/:id', CommentController.getCommentsPost);
 
-app.listen(4444, (err) => {
+app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
     return console.log(err);
   }
