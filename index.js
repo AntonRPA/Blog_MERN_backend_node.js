@@ -30,7 +30,7 @@ const app = express();
 //Создаем хранилище изображений
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    //Если папка "uploads" не найдена, то создаем ее
+    //Если папка "uploads" не найдена, то создаем её
     if (!fs.existsSync('uploads')) {
       fs.mkdirSync('uploads');
     }
