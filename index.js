@@ -82,6 +82,7 @@ app.post(
   CommentController.create,
 );
 app.get('/comments', CommentController.getAllComment);
+app.get('/comments/quantity/:quantity', CommentController.getQuantityComment);
 app.get('/comments/:id', CommentController.getCommentsPost);
 
 app.listen(4444, (err) => {
