@@ -19,7 +19,8 @@ import { UserController, PostController, CommentController } from './controllers
 
 mongoose
   .connect(
-    process.env.MONGODB_URI,
+    process.env.MONGODB_URI ||
+      'mongodb+srv://admin:wwwwww@cluster0.j4bqi3w.mongodb.net/blog?retryWrites=true&w=majority',
     // 'mongodb+srv://admin:wwwwww@cluster0.j4bqi3w.mongodb.net/blog?retryWrites=true&w=majority',
   )
   .then(() => console.log('DB ok'))
@@ -31,11 +32,11 @@ const app = express();
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
     //Если папка "uploads" не найдена, то создаем её
-    if (!fs.existsSync('uploads')) {
-      fs.mkdirSync('uploads');
+    if (!fs.existsSync('tmp')) {
+      fs.mkdirSync('tmp');
     }
 
-    cb(null, 'uploads');
+    cb(null, 'tmp');
   },
   filename: (_, file, cb) => {
     cb(null, file.originalname);
@@ -58,7 +59,7 @@ app.get('/auth/me', checkAuth, UserController.getMe);
 //Rout на загрузку картинки на сервер в папку "uploads"
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   res.json({
-    url: `/uploads/${req.file.originalname}`,
+    url: `/tmp/${req.file.originalname}`,
   });
 });
 
