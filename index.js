@@ -32,11 +32,11 @@ const app = express();
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
     //Если папка "uploads" не найдена, то создаем её
-    if (!fs.existsSync('tmp')) {
-      fs.mkdirSync('tmp');
+    if (!fs.existsSync('/../../../../../tmp')) {
+      fs.mkdirSync('/../../../../../tmp');
     }
 
-    cb(null, 'tmp');
+    cb(null, '/../../../../../tmp');
   },
   filename: (_, file, cb) => {
     cb(null, file.originalname);
@@ -47,7 +47,7 @@ const upload = multer({ storage });
 
 app.use(express.json()); //Позволяет прочитать json в POST запросе от пользователя, в body
 app.use(cors());
-app.use('/tmp', express.static('tmp')); //Get запрос на получение статичного файла
+app.use('/../../../../../tmp', express.static('tmp')); //Get запрос на получение статичного файла
 
 //Авторизация пользователя
 app.post('/auth/login', loginValidation, handleValidationnErrors, UserController.login);
