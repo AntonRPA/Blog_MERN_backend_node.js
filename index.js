@@ -47,7 +47,7 @@ const upload = multer({ storage });
 
 app.use(express.json()); //Позволяет прочитать json в POST запросе от пользователя, в body
 app.use(cors());
-app.use('/uploads', express.static('tmp')); //Get запрос на получение статичного файла
+app.use('/tmp', express.static('tmp')); //Get запрос на получение статичного файла
 
 //Авторизация пользователя
 app.post('/auth/login', loginValidation, handleValidationnErrors, UserController.login);
