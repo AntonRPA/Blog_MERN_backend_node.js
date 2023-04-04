@@ -32,11 +32,11 @@ const app = express();
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
     //Если папка "uploads" не найдена, то создаем её
-    if (!fs.existsSync('tmp')) {
-      fs.mkdirSync('tmp');
+    if (!fs.existsSync('./tmp')) {
+      fs.mkdirSync('./tmp');
     }
 
-    cb(null, 'tmp');
+    cb(null, './tmp');
   },
   filename: (_, file, cb) => {
     cb(null, file.originalname);
